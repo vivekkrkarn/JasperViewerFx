@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="TestReport" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="7dae5b14-239a-42a1-8606-d163d8f0ea86">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="10" width="571" height="30" uuid="047e9894-eb6c-4984-b892-ff244098baaf"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Test Report]]></text>
+			</staticText>
+		</band>
+	</title>
+	<detail>
+		<band height="342" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="571" height="160" uuid="599696f8-a982-4d7f-9c8d-430c1b55f56c"/>
+				<text><![CDATA[Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer dolor urna, consequat a interdum id, ultrices non elit. In varius nisl id scelerisque eleifend. Maecenas sagittis porttitor ligula, id imperdiet lacus elementum nec. Sed faucibus bibendum leo, at viverra turpis rhoncus non. Morbi ut ligula id arcu vulputate molestie. Praesent vehicula augue nec ligula ornare, eget elementum libero fringilla. In quam nibh, pellentesque non vulputate quis, fringilla at sapien. Etiam faucibus orci id nulla viverra semper. Ut eu lobortis odio, ut euismod turpis. 
+
+Interdum et malesuada fames ac ante ipsum primis in faucibus. Curabitur pulvinar orci leo. Curabitur consectetur feugiat pretium. Curabitur ultricies erat ac mollis sollicitudin. Morbi odio justo, ornare vel mattis vitae, commodo in nulla. Nunc dapibus dolor at ante dictum, in pretium augue euismod. Phasellus finibus eget neque at rhoncus. Vivamus feugiat eu est eu malesuada. Nulla rutrum fermentum dui quis ullamcorper. Curabitur ultricies sollicitudin lorem sed posuere. Duis non ex sollicitudin, mattis libero iaculis, pharetra magna. Aliquam nec semper tortor. Proin cursus sagittis risus eu laoreet. Vestibulum sed ipsum metus. Phasellus nisl leo, pellentesque eget nulla sed, imperdiet vulputate velit. Quisque egestas quam id fermentum elementum. 
+
+Sed a rhoncus felis. Phasellus tempor euismod condimentum. Sed condimentum libero mauris, id egestas ligula rhoncus quis. Proin rutrum a nulla ac sagittis. Etiam rhoncus mi quam, id euismod lorem malesuada in. Nam facilisis, neque a malesuada vestibulum, ligula massa scelerisque ipsum, vel sagittis ex enim vel eros. Fusce sit amet augue vel risus ornare convallis nec eget elit. Aliquam tincidunt lectus vitae odio accumsan gravida. Aliquam et magna eros. Sed metus nibh, mattis vestibulum vestibulum nec, suscipit ac elit. 
+
+Morbi a rutrum odio. Quisque auctor pulvinar aliquam. Sed bibendum neque condimentum arcu ultricies convallis. Morbi vel fermentum lacus. Nunc ut massa aliquam, pellentesque augue ac, accumsan urna. Mauris ac urna nunc. Maecenas vel fermentum urna, non placerat elit. Donec ut nisi erat. Pellentesque pharetra orci at sapien eleifend, nec mattis ante aliquam. 
+
+Nulla facilisi. Cras lacinia, dui ac posuere semper, velit nulla lobortis orci, sit amet fermentum quam ligula sit amet massa. Nullam et magna ut nisl auctor finibus. Praesent et tellus quis velit posuere malesuada. Maecenas consequat commodo sapien eget rutrum. Vivamus lectus urna, tempus sed ipsum non, aliquam dignissim est. Donec a ligula massa. Vestibulum mollis, lacus et aliquam convallis, dolor diam tincidunt justo, eget pretium lorem mauris non elit. Integer pulvinar, elit a vestibulum ullamcorper, orci ligula accumsan ipsum, sed scelerisque ipsum quam feugiat nulla. Sed lobortis augue imperdiet felis egestas, non condimentum velit tempus. In eget lorem vel orci congue facilisis. 
+
+]]></text>
+			</staticText>
+			<image>
+				<reportElement x="3" y="163" width="557" height="179" uuid="2bc4402f-a430-459c-ac8b-f41dce306546"/>
+				<imageExpression><![CDATA["img/test pattern.jpg"]]></imageExpression>
+			</image>
+		</band>
+	</detail>
+	<summary>
+		<band height="42" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="10" width="571" height="30" uuid="9e791854-0252-4368-a0f2-562aa55b6f18"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[End Test]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

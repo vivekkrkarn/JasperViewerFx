@@ -5,7 +5,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane fx:id="view" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mgrecol.jasper.jasperviewerfx.JRViewerFxController">
+<BorderPane fx:id="view" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mgrecol.jasper.jasperviewerfx.controller.JRViewerController">
    <top>
       <Pane prefHeight="52.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
