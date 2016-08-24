@@ -40,6 +40,22 @@ public class TransactionResult {
         this.result = result;
     }
 
+    public Date getTransactionTime() {
+        return transactionTime;
+    }
+
+    public void setTransactionTime(Date transactionTime) {
+        this.transactionTime = transactionTime;
+    }
+
+    public int getObjectId() {
+        return objectId;
+    }
+
+    public void setObjectId(int objectId) {
+        this.objectId = objectId;
+    }
+
     @Override
     public String toString() {
         return "TransactionResult [resultNumber=" + resultNumber
@@ -59,29 +75,12 @@ public class TransactionResult {
     public boolean equals(Object obj) {
         if (this == obj)
             return true;
-        if (obj == null)
+        if (null == obj)
             return false;
         if (getClass() != obj.getClass())
             return false;
         TransactionResult other = (TransactionResult) obj;
-        if (resultNumber != other.resultNumber)
-            return false;
+        if (resultNumber != other.resultNumber) return false;
         return true;
-    }
-
-    public Date getTransactionTime() {
-        return transactionTime;
-    }
-
-    public void setTransactionTime(Date transactionTime) {
-        this.transactionTime = transactionTime;
-    }
-
-    public int getObjectId() {
-        return objectId;
-    }
-
-    public void setObjectId(int objectId) {
-        this.objectId = objectId;
     }
 }
