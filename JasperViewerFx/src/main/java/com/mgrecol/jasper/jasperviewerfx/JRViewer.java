@@ -14,7 +14,6 @@ import org.apache.commons.logging.LogFactory;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 import java.util.stream.Collectors;
 
 import static javafx.stage.FileChooser.ExtensionFilter;
@@ -34,17 +33,17 @@ public class JRViewer {
     private final List<ExtensionFilter> extensionFilters;
 
     public JRViewer() {
-        this(JRViewerSupportedLocale.EN.getLocale(),
+        this(JRViewerSupportedLocale.EN,
                 640, 420,
                 Arrays.asList(
                         JRViewerFileExportExtention.PDF,
                         JRViewerFileExportExtention.DOCX));
     }
 
-    public JRViewer(Locale locale,
+    public JRViewer(JRViewerSupportedLocale supportedLocale,
                     int sceneWidth, int sceneHeight,
                     List<JRViewerFileExportExtention> extensionFilters) {
-        BundleUtils.init(locale);
+        BundleUtils.init(supportedLocale);
         this.sceneWidth = sceneWidth;
         this.sceneHeight = sceneHeight;
         this.extensionFilters = extensionFilters.stream()

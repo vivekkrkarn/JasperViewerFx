@@ -1,6 +1,7 @@
 package com.mgrecol.jasper.jasperviewerfx.util;
 
-import java.util.Locale;
+import com.mgrecol.jasper.jasperviewerfx.enums.JRViewerSupportedLocale;
+
 import java.util.ResourceBundle;
 
 /**
@@ -12,8 +13,8 @@ public class BundleUtils {
     private static final String BUNDLE = "bundles/locale";
     private static ResourceBundle resourceBundle;
 
-    public static void init(Locale locale) {
-        resourceBundle = ResourceBundle.getBundle(BUNDLE, locale);
+    public static void init(JRViewerSupportedLocale locale) {
+        resourceBundle = ResourceBundle.getBundle(BUNDLE, locale.getLocale());
     }
 
     public static ResourceBundle getBundle() {
