@@ -1,6 +1,8 @@
 JasperViewerFx
 ------------------
 
+<img width="491" alt="screen" src="https://cloud.githubusercontent.com/assets/1503214/17997893/0ce56d50-6b7a-11e6-8a6a-6a09b402c395.png">
+
 JasperViewrFx is a full featured Jasper report viewer written completely in JavaFx. 
 It has the following features:
 * View and zoom  all of the pages of a Jasper report document.
