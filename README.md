@@ -8,6 +8,8 @@ It has the following features:
 * View and zoom  all of the pages of a Jasper report document.
 * Export report documents to the following formats: PDF, PNG, DOCX, XLSX, HTML
 * Print reports using the system dialog.
+ 
+Originally this project has been forked from [mgrecol/JasperViewerFx](https://github.com/mgrecol/JasperViewerFx) and I decided to improve it by code cleaning, refactoring, simplifying small GUI redesigning.
 
 How to use:
 ------------
