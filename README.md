@@ -14,13 +14,13 @@ Originally this project has been forked from [mgrecol/JasperViewerFx](https://gi
 How to use:
 ------------
 JasperViewerFx is made to be included in a running JavaFxApplication. This means that a running JavaFx application would already have have a stage created. What you need to integrate this feature into your project is just put jar into your classpath, after that:
-```
+```java
 JRViewer jrViewer = new JRViewer();
 Stage viewerStage = jrViewer.getViewerStage(jasperPrint);
 viewerStage.show();
 ```
 Additionally you can pass supported language parameter, scene size and export filetypes which you need:
-```
+```java
 JRViewer jrViewer = new JRViewer(
     JRViewerSupportedLocale.EN,
     640, 420,
