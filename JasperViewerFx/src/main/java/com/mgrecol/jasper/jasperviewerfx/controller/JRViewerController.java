@@ -1,6 +1,3 @@
-/**
- *
- */
 package com.mgrecol.jasper.jasperviewerfx.controller;
 
 import com.mgrecol.jasper.jasperviewerfx.enums.JRViewerFileExportExtention;
@@ -32,9 +29,9 @@ import java.util.ResourceBundle;
 
 /**
  * @author Michael Grecol
- *         project JasperViewerFx
- *         filename JRViewerController.java
- *         date Mar 23, 2015
+ * project JasperViewerFx
+ * filename JRViewerController.java
+ * date Mar 23, 2015
  */
 public class JRViewerController implements Initializable {
 
@@ -43,6 +40,8 @@ public class JRViewerController implements Initializable {
     private ResourceBundle resourceBundle;
 
     private JasperPrint jasperPrint;
+    private String initialDirectory;
+    private String initialFileName;
     private List<ExtensionFilter> extensionFilters;
 
     private Double zoomFactor;
@@ -88,9 +87,10 @@ public class JRViewerController implements Initializable {
     }
 
     @FXML
-    private void save(ActionEvent actionEvent) {
+    private void save() {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setInitialDirectory(new File("./"));
+        fileChooser.setInitialDirectory(new File(initialDirectory));
+        fileChooser.setInitialFileName(initialFileName);
         fileChooser.setTitle(resourceBundle.getString("save.file.title"));
         fileChooser.getExtensionFilters().setAll(extensionFilters);
 
@@ -163,6 +163,14 @@ public class JRViewerController implements Initializable {
 
     public void setJasperPrint(JasperPrint jasperPrint) {
         this.jasperPrint = jasperPrint;
+    }
+
+    public void setInitialDirectory(String initialDirectory) {
+        this.initialDirectory = initialDirectory;
+    }
+
+    public void setInitialFileName(String initialFileName) {
+        this.initialFileName = initialFileName;
     }
 
     public void setExtensionFilters(List<ExtensionFilter> extensionFilters) {

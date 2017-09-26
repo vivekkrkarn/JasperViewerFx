@@ -20,7 +20,7 @@ import static javafx.stage.FileChooser.ExtensionFilter;
 
 /**
  * @author Alexey Silichenko (a.silichenko@gmail.com)
- *         created on 19.08.2016
+ * created on 19.08.2016
  */
 public class JRViewer {
 
@@ -30,11 +30,13 @@ public class JRViewer {
 
     private final int sceneWidth;
     private final int sceneHeight;
+    private final String initialDirectory;
+    private final String initialFileName;
     private final List<ExtensionFilter> extensionFilters;
 
     public JRViewer() {
         this(JRViewerSupportedLocale.EN,
-                640, 420,
+                640, 420, "./", "",
                 Arrays.asList(
                         JRViewerFileExportExtention.PDF,
                         JRViewerFileExportExtention.DOCX));
@@ -42,10 +44,13 @@ public class JRViewer {
 
     public JRViewer(JRViewerSupportedLocale supportedLocale,
                     int sceneWidth, int sceneHeight,
+                    String initialDirectory, String initialFileName,
                     List<JRViewerFileExportExtention> extensionFilters) {
         BundleUtils.init(supportedLocale);
         this.sceneWidth = sceneWidth;
         this.sceneHeight = sceneHeight;
+        this.initialDirectory = initialDirectory;
+        this.initialFileName = initialFileName;
         this.extensionFilters = extensionFilters.stream()
                 .map(JRViewerFileExportExtention::getExtensionFilter)
                 .collect(Collectors.toList());
@@ -61,6 +66,8 @@ public class JRViewer {
             stage.setScene(scene);
 
             JRViewerController jrViewerFxController = loader.getController();
+            jrViewerFxController.setInitialDirectory(initialDirectory);
+            jrViewerFxController.setInitialFileName(initialFileName);
             jrViewerFxController.setExtensionFilters(extensionFilters);
             jrViewerFxController.setJasperPrint(jasperPrint);
             jrViewerFxController.init();
