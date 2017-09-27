@@ -4,15 +4,17 @@ import com.mgrecol.jasper.jasperviewerfx.enums.JRViewerFileExportExtention;
 import com.mgrecol.jasper.jasperviewerfx.service.ExportService;
 import com.mgrecol.jasper.jasperviewerfx.util.AlertUtils;
 import com.mgrecol.jasper.jasperviewerfx.util.ImageUtils;
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import net.sf.jasperreports.engine.JRException;
@@ -32,6 +34,8 @@ import java.util.ResourceBundle;
  * project JasperViewerFx
  * filename JRViewerController.java
  * date Mar 23, 2015
+ * @author improved by Alexey Silichenko (a.silichenko@gmail.com)
+ * date Sep 27, 2017
  */
 public class JRViewerController implements Initializable {
 
@@ -49,11 +53,13 @@ public class JRViewerController implements Initializable {
     private double imageWidth;
 
     @FXML
-    protected Node view;
+    protected BorderPane view;
     @FXML
     private ComboBox<Integer> pageList;
     @FXML
     private Slider zoomLevel;
+    @FXML
+    private StackPane imageHolder;
     @FXML
     private ScrollPane scrollPane;
     @FXML
@@ -61,7 +67,10 @@ public class JRViewerController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        this.resourceBundle = resources;
+        resourceBundle = resources;
+
+        imageHolder.minWidthProperty().bind(Bindings.createDoubleBinding(() ->
+                scrollPane.getViewportBounds().getWidth(), scrollPane.viewportBoundsProperty()));
 
         zoomLevel.valueProperty().addListener((observable, oldValue, newValue) -> {
             zoomFactor = newValue.doubleValue() / 100;
