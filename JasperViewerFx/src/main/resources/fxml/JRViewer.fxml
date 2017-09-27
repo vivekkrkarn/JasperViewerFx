@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.ScrollPane?>
@@ -11,11 +12,9 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 
-<BorderPane fx:id="view" prefHeight="400.0" prefWidth="600.0"
-            xmlns="http://javafx.com/javafx/8.0.60"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.mgrecol.jasper.jasperviewerfx.controller.JRViewerController">
+<BorderPane fx:id="view" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mgrecol.jasper.jasperviewerfx.controller.JRViewerController">
     <top>
         <ToolBar BorderPane.alignment="CENTER">
             <Button mnemonicParsing="false" onAction="#save">
@@ -47,7 +46,7 @@
                     </ImageView>
                 </graphic>
             </Button>
-            <ComboBox fx:id="pageList" onAction="#pageListSelected" prefHeight="32.0" prefWidth="26.0" />
+            <ComboBox fx:id="pageList" onAction="#pageListSelected" prefHeight="32.0" prefWidth="75.0" />
             <Button layoutX="466.0" layoutY="10.0" mnemonicParsing="false" onAction="#goNextPage">
                 <graphic>
                     <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
@@ -63,20 +62,19 @@
                 </graphic>
             </Button>
             <Separator layoutX="128.0" layoutY="10.0" orientation="VERTICAL" />
-            <Slider fx:id="zoomLevel" blockIncrement="25.0" majorTickUnit="75.0"
-                    max="175.0" min="25.0" minorTickCount="2"
-                    prefHeight="23.0" prefWidth="141.0"
-                    showTickLabels="true" showTickMarks="true"
-                    value="100.0" />
+            <Slider fx:id="zoomLevel" blockIncrement="25.0" majorTickUnit="75.0" max="175.0" min="25.0" minorTickCount="2" prefHeight="23.0" prefWidth="141.0" showTickLabels="true" showTickMarks="true" value="100.0" />
         </ToolBar>
     </top>
     <center>
-        <ScrollPane fx:id="scrollPane" pannable="true" BorderPane.alignment="TOP_CENTER">
+        <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" pannable="true">
             <StackPane fx:id="imageHolder" style="-fx-background-color: #CDD1D6;">
                 <padding>
                     <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                 </padding>
-                <ImageView fx:id="imageView" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+                <VBox fx:id="vbox" alignment="CENTER" spacing="5.0" />
+                <cursor>
+                    <Cursor fx:constant="OPEN_HAND" />
+                </cursor>
             </StackPane>
         </ScrollPane>
     </center>

@@ -34,6 +34,7 @@ public class JRViewer {
     private final String initialFileName;
     private final List<ExtensionFilter> extensionFilters;
 
+    @SuppressWarnings("unused")
     public JRViewer() {
         this(JRViewerSupportedLocale.EN,
                 640, 420, "./", "",
@@ -71,6 +72,8 @@ public class JRViewer {
             jrViewerFxController.setExtensionFilters(extensionFilters);
             jrViewerFxController.setJasperPrint(jasperPrint);
             jrViewerFxController.init();
+
+            stage.setWidth(jasperPrint.getPageWidth() + 100);
 
             return stage;
         } catch (Exception e) {

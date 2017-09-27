@@ -4,17 +4,21 @@ import com.mgrecol.jasper.jasperviewerfx.enums.JRViewerFileExportExtention;
 import com.mgrecol.jasper.jasperviewerfx.service.ExportService;
 import com.mgrecol.jasper.jasperviewerfx.util.AlertUtils;
 import com.mgrecol.jasper.jasperviewerfx.util.ImageUtils;
-import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Cursor;
+import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import net.sf.jasperreports.engine.JRException;
@@ -48,9 +52,10 @@ public class JRViewerController implements Initializable {
     private String initialFileName;
     private List<ExtensionFilter> extensionFilters;
 
-    private Double zoomFactor;
-    private double imageHeight;
-    private double imageWidth;
+    private Double zoomFactor = 1d;
+    private double vvalue;
+    private double originalPageHeight;
+    private double originalPageWidth;
 
     @FXML
     protected BorderPane view;
@@ -63,36 +68,90 @@ public class JRViewerController implements Initializable {
     @FXML
     private ScrollPane scrollPane;
     @FXML
-    private ImageView imageView;
+    private VBox vbox;
+
+    private double pageToScrollValue(int pageNumber) {
+        final double nodeY = vbox.getChildren().get(pageNumber).getLayoutY();
+        final double imageHolderH = imageHolder.getHeight();
+        final double viewportH = scrollPane.getViewportBounds().getHeight();
+        final double calcH = imageHolderH - viewportH;
+        return nodeY / calcH;
+    }
+
+    /**
+     * number of page which body crosses middle of viewport
+     *
+     * @param value scroll v value
+     * @return page number
+     */
+    private int scrollValueToTage(double value) {
+        final double imageHolderH = imageHolder.getHeight();
+        final double viewportH = scrollPane.getViewportBounds().getHeight();
+        final double checkLinePos = viewportH / 2;
+        final double calcH = imageHolderH - viewportH;
+        final double testY = checkLinePos + calcH * value; // under middle of viewport
+
+        for (int i = 0; i < vbox.getChildren().size(); i++) {
+            final Node node = vbox.getChildren().get(i);
+            final double nodeY = node.getLayoutY();
+            final double nodeH = ((ImageView) node).getFitHeight() + vbox.getSpacing();
+            if (testY >= nodeY && testY <= (nodeY + nodeH)) return i + 1;
+        }
+        return 1;
+    }
+
+    private ImageView scaleImageView(ImageView imageView) {
+        imageView.setFitHeight(originalPageHeight * zoomFactor);
+        imageView.setFitWidth(originalPageWidth * zoomFactor);
+        return imageView;
+    }
+
+    private void loadPages() {
+        final int pagesCount = jasperPrint.getPages().size();
+        for (int i = 0; i < pagesCount; i++) {
+            final Image image = ImageUtils.getImage(jasperPrint, i);
+            vbox.getChildren().add(scaleImageView(new ImageView(image)));
+        }
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         resourceBundle = resources;
 
-        imageHolder.minWidthProperty().bind(Bindings.createDoubleBinding(() ->
-                scrollPane.getViewportBounds().getWidth(), scrollPane.viewportBoundsProperty()));
+        imageHolder.heightProperty()
+                .addListener((observable, oldValue, newValue) -> scrollPane.setVvalue(vvalue));
+
+        imageHolder.setOnMousePressed(event -> imageHolder.setCursor(Cursor.CLOSED_HAND));
+        imageHolder.setOnDragDetected(event -> imageHolder.setCursor(Cursor.CLOSED_HAND));
+        imageHolder.setOnMouseReleased(event -> imageHolder.setCursor(Cursor.OPEN_HAND));
 
         zoomLevel.valueProperty().addListener((observable, oldValue, newValue) -> {
             zoomFactor = newValue.doubleValue() / 100;
-            imageView.setFitHeight(imageHeight * zoomFactor);
-            imageView.setFitWidth(imageWidth * zoomFactor);
+            vvalue = scrollPane.getVvalue();
+
+            vbox.getChildren().forEach(node -> scaleImageView((ImageView) node));
+        });
+
+        scrollPane.vvalueProperty().addListener((observable, oldValue, newValue) -> {
+            final int value = scrollValueToTage(newValue.doubleValue());
+            final EventHandler<ActionEvent> onAction = pageList.getOnAction();
+            pageList.setOnAction(null);
+            pageList.setValue(value);
+            pageList.setOnAction(onAction);
         });
     }
 
     public void init() {
-        zoomFactor = 1d;
-        zoomLevel.setValue(100d);
-        imageView.setX(0);
-        imageView.setY(0);
-        imageHeight = jasperPrint.getPageHeight();
-        imageWidth = jasperPrint.getPageWidth();
+        originalPageHeight = jasperPrint.getPageHeight();
+        originalPageWidth = jasperPrint.getPageWidth();
 
-        List<Integer> pages = new ArrayList<>();
-        for (int i = 0; i < jasperPrint.getPages().size(); ) pages.add(++i);
+        final List<Integer> pages = new ArrayList<>();
+        final int pagesCount = jasperPrint.getPages().size();
+        for (int i = 0; i < pagesCount; ) pages.add(++i);
         pageList.setItems(FXCollections.observableArrayList(pages));
         pageList.getSelectionModel().select(0);
 
-        if (!jasperPrint.getPages().isEmpty()) viewPage(0);
+        loadPages();
     }
 
     @FXML
@@ -126,12 +185,6 @@ public class JRViewerController implements Initializable {
         }
     }
 
-    private void viewPage(int pageNumber) {
-        imageView.setFitHeight(imageHeight * zoomFactor);
-        imageView.setFitWidth(imageWidth * zoomFactor);
-        imageView.setImage(ImageUtils.getImage(jasperPrint, pageNumber));
-    }
-
     @FXML
     private void print() {
         try {
@@ -143,11 +196,9 @@ public class JRViewerController implements Initializable {
     }
 
     @FXML
-    private void pageListSelected(final ActionEvent event) {
-        viewPage(pageList.getSelectionModel().getSelectedItem() - 1);
-
-        scrollPane.setVvalue(0);
-        scrollPane.setHvalue(0);
+    private void pageListSelected() {
+        final int pageNumber = pageList.getSelectionModel().getSelectedItem() - 1;
+        scrollPane.setVvalue(pageToScrollValue(pageNumber));
     }
 
     @FXML
