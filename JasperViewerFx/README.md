@@ -1,5 +1,3 @@
-Build status: [![Build Status](https://travis-ci.org/vinumeris/updatefx.png?branch=master)](https://travis-ci.org/vinumeris/updatefx)
-
 JasperViewerFx
 ------------------
 
@@ -18,3 +16,11 @@ running JavaFxApplication.  This means that a running JavaFx application would a
 created.   In this case one would fill a JasperPrint object and pass it to the JRViewerFx class's constructor
  with the JRViewerFxMode desired. For convenience, the class JRViewerMain is included which creates a stage
  and fills in a report and constructs a JRViewerFx instance in REPORT_VIEW mode.
+ 
+ How to build:
+ ---
+ To build jar file with all dependencies included call maven target:
+ ```
+ assembly:assembly -DdescriptorId=jar-with-dependencies
+ ```
+ 
