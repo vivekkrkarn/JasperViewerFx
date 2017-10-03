@@ -157,8 +157,8 @@ public class JRViewerController implements Initializable {
     @FXML
     private void save() {
         FileChooser fileChooser = new FileChooser();
-        File directory = new File(initialDirectory);
-        if (!directory.exists()) directory = new File("./");
+        File directory = new File(null != initialDirectory ? initialDirectory : "");
+        if (!directory.exists()) directory = new File("");
         fileChooser.setInitialDirectory(directory);
         fileChooser.setInitialFileName(initialFileName);
         fileChooser.setTitle(resourceBundle.getString("save.file.title"));
