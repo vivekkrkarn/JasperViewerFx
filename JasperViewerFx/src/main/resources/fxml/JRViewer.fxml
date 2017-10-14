@@ -32,14 +32,14 @@
                 </graphic>
             </Button>
             <Separator orientation="VERTICAL" />
-            <Button mnemonicParsing="false" onAction="#goFirstPage">
+            <Button fx:id="firstPageBtn" disable="true" mnemonicParsing="false" onAction="#goFirstPage">
                 <graphic>
                     <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                         <Image url="/img/ic_first_page_black_18dp_1x.png" />
                     </ImageView>
                 </graphic>
             </Button>
-            <Button layoutX="434.0" layoutY="10.0" mnemonicParsing="false" onAction="#goPrevPage">
+            <Button fx:id="prevPageBtn" disable="true" layoutX="434.0" layoutY="10.0" mnemonicParsing="false" onAction="#goPrevPage">
                 <graphic>
                     <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                         <Image url="/img/ic_navigate_before_black_18dp_1x.png" />
@@ -47,14 +47,14 @@
                 </graphic>
             </Button>
             <ComboBox fx:id="pageList" onAction="#pageListSelected" prefHeight="32.0" prefWidth="75.0" />
-            <Button layoutX="466.0" layoutY="10.0" mnemonicParsing="false" onAction="#goNextPage">
+            <Button fx:id="nextPageBtn" layoutX="466.0" layoutY="10.0" mnemonicParsing="false" onAction="#goNextPage">
                 <graphic>
                     <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                         <Image url="/img/ic_navigate_next_black_18dp_1x.png" />
                     </ImageView>
                 </graphic>
             </Button>
-            <Button layoutX="495.0" layoutY="10.0" mnemonicParsing="false" onAction="#goLastPage">
+            <Button fx:id="lastPageBtn" layoutX="495.0" layoutY="10.0" mnemonicParsing="false" onAction="#goLastPage">
                 <graphic>
                     <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                         <Image url="/img/ic_last_page_black_18dp_1x.png" />

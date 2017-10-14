@@ -11,6 +11,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
@@ -75,6 +76,15 @@ public class JRViewerController implements Initializable {
     @FXML
     public ImageView loadingIcon;
 
+    @FXML
+    private Button firstPageBtn;
+    @FXML
+    private Button prevPageBtn;
+    @FXML
+    private Button nextPageBtn;
+    @FXML
+    private Button lastPageBtn;
+
     private double pageToScrollValue(int pageNumber) {
         final double nodeY = vbox.getChildren().get(pageNumber).getLayoutY();
         final double contentH = imageHolder.getHeight();
@@ -129,6 +139,7 @@ public class JRViewerController implements Initializable {
     public void displayPages() {
         vbox.getChildren().setAll(pages);
         view.setDisable(false);
+        disableNextBtns(pages.size() <= 1);
         scrollPane.requestFocus();
     }
 
@@ -158,6 +169,8 @@ public class JRViewerController implements Initializable {
             pageList.setOnAction(null);
             pageList.setValue(value);
             pageList.setOnAction(onAction);
+            disablePrevBtns(1 == value);
+            disableNextBtns(pages.size() == value);
         });
 
         scrollPane.setOnKeyPressed(event -> {
@@ -173,6 +186,16 @@ public class JRViewerController implements Initializable {
                 event.consume();
             }
         });
+    }
+
+    private void disablePrevBtns(boolean disable) {
+        firstPageBtn.setDisable(disable);
+        prevPageBtn.setDisable(disable);
+    }
+
+    private void disableNextBtns(boolean disable) {
+        nextPageBtn.setDisable(disable);
+        lastPageBtn.setDisable(disable);
     }
 
     public void init() {
