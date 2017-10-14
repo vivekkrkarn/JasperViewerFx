@@ -169,6 +169,13 @@ public class JRViewerController implements Initializable {
         loadPages();
     }
 
+    /**
+     * Is called before stage is shown
+     */
+    public void onShow() {
+        scrollPane.requestFocus();
+    }
+
     @FXML
     private void save() {
         FileChooser fileChooser = new FileChooser();

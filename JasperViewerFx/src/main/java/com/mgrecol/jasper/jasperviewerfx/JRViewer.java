@@ -74,6 +74,7 @@ public class JRViewer {
             jrViewerFxController.init();
 
             stage.setWidth(jasperPrint.getPageWidth() + 100);
+            stage.setOnShowing(event -> jrViewerFxController.onShow());
 
             return stage;
         } catch (Exception e) {
