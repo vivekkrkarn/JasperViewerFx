@@ -71,6 +71,9 @@
                 <padding>
                     <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                 </padding>
+                <ImageView fx:id="loadingIcon" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                    <Image url="/img/loading-icon.gif"/>
+                </ImageView>
                 <VBox fx:id="vbox" alignment="CENTER" spacing="5.0" />
                 <cursor>
                     <Cursor fx:constant="OPEN_HAND" />

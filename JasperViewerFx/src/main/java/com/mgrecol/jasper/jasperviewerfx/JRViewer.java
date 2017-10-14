@@ -3,7 +3,10 @@ package com.mgrecol.jasper.jasperviewerfx;
 import com.mgrecol.jasper.jasperviewerfx.controller.JRViewerController;
 import com.mgrecol.jasper.jasperviewerfx.enums.JRViewerFileExportExtention;
 import com.mgrecol.jasper.jasperviewerfx.enums.JRViewerSupportedLocale;
+import com.mgrecol.jasper.jasperviewerfx.event.JRViewerEvent;
 import com.mgrecol.jasper.jasperviewerfx.util.BundleUtils;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -16,6 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.mgrecol.jasper.jasperviewerfx.event.JRViewerEvent.JR_REPORT_LOAD_FAILED;
 import static javafx.stage.FileChooser.ExtensionFilter;
 
 /**
@@ -33,6 +37,34 @@ public class JRViewer {
     private final String initialDirectory;
     private final String initialFileName;
     private final List<ExtensionFilter> extensionFilters;
+
+    private JRViewerController jrViewerFxController;
+
+    private void loadPages() {
+        jrViewerFxController.loadPages();
+    }
+
+    private void displayPages() {
+        jrViewerFxController.displayPages();
+    }
+
+    private Service<Boolean> service = new Service<Boolean>() {
+        @Override
+        protected Task<Boolean> createTask() {
+            return new Task<Boolean>() {
+                @Override
+                protected Boolean call() throws Exception {
+                    try {
+                        loadPages();
+                        return true;
+                    } catch (Exception e) {
+                        logger.error("Failed to load pages: ", e);
+                        return false;
+                    }
+                }
+            };
+        }
+    };
 
     @SuppressWarnings("unused")
     public JRViewer() {
@@ -57,26 +89,41 @@ public class JRViewer {
                 .collect(Collectors.toList());
     }
 
-    public Stage getViewerStage(JasperPrint jasperPrint) {
-        Stage stage = new Stage();
+    private void onShow(Stage stage) {
+        service.setOnSucceeded(event -> {
+            final Object result = event.getSource().getValue();
+            if (null != result && (boolean) result) {
+                displayPages();
+            } else {
+                stage.close();
+                stage.fireEvent(new JRViewerEvent(JR_REPORT_LOAD_FAILED));
+            }
+        });
+
+        service.start();
+    }
+
+    public Stage buildStage(JasperPrint jasperPrint) {
+        final Stage retval = new Stage();
         try {
+            retval.setOnShown(event -> onShow(retval));
+
             FXMLLoader loader = new FXMLLoader();
             loader.setResources(BundleUtils.getBundle());
             InputStream fxmlStream = JRViewer.class.getResourceAsStream(JRVIEWER_FXML);
             Scene scene = new Scene(loader.load(fxmlStream), sceneWidth, sceneHeight);
-            stage.setScene(scene);
+            retval.setScene(scene);
 
-            JRViewerController jrViewerFxController = loader.getController();
+            jrViewerFxController = loader.getController();
             jrViewerFxController.setInitialDirectory(initialDirectory);
             jrViewerFxController.setInitialFileName(initialFileName);
             jrViewerFxController.setExtensionFilters(extensionFilters);
             jrViewerFxController.setJasperPrint(jasperPrint);
             jrViewerFxController.init();
 
-            stage.setWidth(jasperPrint.getPageWidth() + 100);
-            stage.setOnShowing(event -> jrViewerFxController.onShow());
+            retval.setWidth(jasperPrint.getPageWidth() + 100);
 
-            return stage;
+            return retval;
         } catch (Exception e) {
             logger.error("Could not view report", e);
             throw new RuntimeException(e);

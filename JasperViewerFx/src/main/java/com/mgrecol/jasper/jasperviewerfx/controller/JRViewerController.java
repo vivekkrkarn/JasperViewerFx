@@ -58,6 +58,8 @@ public class JRViewerController implements Initializable {
     private double originalPageHeight;
     private double originalPageWidth;
 
+    private List<ImageView> pages = new ArrayList<>();
+
     @FXML
     protected BorderPane view;
     @FXML
@@ -70,6 +72,8 @@ public class JRViewerController implements Initializable {
     private ScrollPane scrollPane;
     @FXML
     private VBox vbox;
+    @FXML
+    public ImageView loadingIcon;
 
     private double pageToScrollValue(int pageNumber) {
         final double nodeY = vbox.getChildren().get(pageNumber).getLayoutY();
@@ -107,17 +111,32 @@ public class JRViewerController implements Initializable {
         return imageView;
     }
 
-    private void loadPages() {
+    /**
+     * Load report and create a list of images for pages
+     */
+    public void loadPages() {
         final int pagesCount = jasperPrint.getPages().size();
         for (int i = 0; i < pagesCount; i++) {
             final Image image = ImageUtils.getImage(jasperPrint, i);
-            vbox.getChildren().add(scaleImageView(new ImageView(image)));
+            pages.add(scaleImageView(new ImageView(image)));
         }
+        loadingIcon.setVisible(false);
+    }
+
+    /**
+     * Put images list into container on GUI
+     */
+    public void displayPages() {
+        vbox.getChildren().setAll(pages);
+        view.setDisable(false);
+        scrollPane.requestFocus();
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         resourceBundle = resources;
+
+        view.setDisable(true);
 
         imageHolder.heightProperty()
                 .addListener((observable, oldValue, newValue) -> scrollPane.setVvalue(vvalue));
@@ -165,15 +184,6 @@ public class JRViewerController implements Initializable {
         for (int i = 0; i < pagesCount; ) pages.add(++i);
         pageList.setItems(FXCollections.observableArrayList(pages));
         pageList.getSelectionModel().select(0);
-
-        loadPages();
-    }
-
-    /**
-     * Is called before stage is shown
-     */
-    public void onShow() {
-        scrollPane.requestFocus();
     }
 
     @FXML
