@@ -89,7 +89,7 @@ public class JRViewerController implements Initializable {
      * @param value scroll v value
      * @return page number
      */
-    private int scrollValueToTage(double value) {
+    private int scrollValueToPage(double value) {
         final double imageHolderH = imageHolder.getHeight();
         final double viewportH = scrollPane.getViewportBounds().getHeight();
         final double checkLinePos = viewportH / 2;
@@ -153,7 +153,7 @@ public class JRViewerController implements Initializable {
         });
 
         scrollPane.vvalueProperty().addListener((observable, oldValue, newValue) -> {
-            final int value = scrollValueToTage(newValue.doubleValue());
+            final int value = scrollValueToPage(newValue.doubleValue());
             final EventHandler<ActionEvent> onAction = pageList.getOnAction();
             pageList.setOnAction(null);
             pageList.setValue(value);
