@@ -16,6 +16,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -72,9 +73,9 @@ public class JRViewerController implements Initializable {
 
     private double pageToScrollValue(int pageNumber) {
         final double nodeY = vbox.getChildren().get(pageNumber).getLayoutY();
-        final double imageHolderH = imageHolder.getHeight();
+        final double contentH = imageHolder.getHeight();
         final double viewportH = scrollPane.getViewportBounds().getHeight();
-        final double calcH = imageHolderH - viewportH;
+        final double calcH = contentH - viewportH;
         return nodeY / calcH;
     }
 
@@ -138,6 +139,20 @@ public class JRViewerController implements Initializable {
             pageList.setOnAction(null);
             pageList.setValue(value);
             pageList.setOnAction(onAction);
+        });
+
+        scrollPane.setOnKeyPressed(event -> {
+            Integer mod = null;
+            if (KeyCode.PAGE_UP.equals(event.getCode())) mod = -1;
+            if (KeyCode.PAGE_DOWN.equals(event.getCode())) mod = 1;
+
+            if (null != mod) {
+                final double contentH = imageHolder.getHeight();
+                final double viewportH = scrollPane.getViewportBounds().getHeight();
+                final double vvalue = scrollPane.getVvalue();
+                scrollPane.setVvalue(vvalue + mod * (viewportH / contentH));
+                event.consume();
+            }
         });
     }
 
