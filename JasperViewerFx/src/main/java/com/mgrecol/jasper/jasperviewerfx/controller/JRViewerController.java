@@ -87,6 +87,10 @@ public class JRViewerController implements Initializable {
     @FXML
     private Button lastPageBtn;
 
+    public boolean busy() {
+        return printService.isRunning();
+    }
+
     private double pageToScrollValue(int pageNumber) {
         final double nodeY = vbox.getChildren().get(pageNumber).getLayoutY();
         final double contentH = imageHolder.getHeight();
@@ -247,10 +251,6 @@ public class JRViewerController implements Initializable {
                 AlertUtils.showAlert(e, this.resourceBundle.getString("error.could.not.save"));
             }
         }
-    }
-
-    public boolean busy() {
-        return printService.isRunning();
     }
 
     @FXML
