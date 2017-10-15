@@ -146,7 +146,6 @@ public class JRViewerController implements Initializable {
         vbox.getChildren().setAll(pages);
         view.setDisable(false);
         disableNextBtns(pages.size() <= 1);
-        scrollPane.requestFocus();
     }
 
     @Override
@@ -154,6 +153,9 @@ public class JRViewerController implements Initializable {
         resourceBundle = resources;
 
         view.setDisable(true);
+        view.disableProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) scrollPane.requestFocus();
+        });
 
         imageHolder.heightProperty()
                 .addListener((observable, oldValue, newValue) -> scrollPane.setVvalue(vvalue));
