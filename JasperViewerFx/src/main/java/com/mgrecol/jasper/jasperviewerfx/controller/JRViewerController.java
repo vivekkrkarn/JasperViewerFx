@@ -19,6 +19,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -174,20 +175,6 @@ public class JRViewerController implements Initializable {
             disableNextBtns(pages.size() == value);
         });
 
-        scrollPane.setOnKeyPressed(event -> {
-            Integer mod = null;
-            if (KeyCode.PAGE_UP.equals(event.getCode())) mod = -1;
-            if (KeyCode.PAGE_DOWN.equals(event.getCode())) mod = 1;
-
-            if (null != mod) {
-                final double contentH = imageHolder.getHeight();
-                final double viewportH = scrollPane.getViewportBounds().getHeight();
-                final double vvalue = scrollPane.getVvalue();
-                scrollPane.setVvalue(vvalue + mod * (viewportH / contentH));
-                event.consume();
-            }
-        });
-
         printService = new PrintService();
         printService.onDialogClosed(event -> view.setDisable(false));
         printService.onDialogError(event -> AlertUtils.showAlert(resourceBundle.getString("error.could.not.print")));
@@ -212,6 +199,21 @@ public class JRViewerController implements Initializable {
         for (int i = 0; i < pagesCount; ) pages.add(++i);
         pageList.setItems(FXCollections.observableArrayList(pages));
         pageList.getSelectionModel().select(0);
+    }
+
+    @FXML
+    private void onScrollKeyPressed(KeyEvent event) {
+        Integer mod = null;
+        if (KeyCode.PAGE_UP.equals(event.getCode())) mod = -1;
+        if (KeyCode.PAGE_DOWN.equals(event.getCode())) mod = 1;
+
+        if (null != mod) {
+            final double contentH = imageHolder.getHeight();
+            final double viewportH = scrollPane.getViewportBounds().getHeight();
+            final double vvalue = scrollPane.getVvalue();
+            scrollPane.setVvalue(vvalue + mod * (viewportH / contentH));
+            event.consume();
+        }
     }
 
     @FXML

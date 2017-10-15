@@ -66,7 +66,7 @@
         </ToolBar>
     </top>
     <center>
-        <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" pannable="true">
+        <ScrollPane fx:id="scrollPane" onKeyPressed="#onScrollKeyPressed" fitToHeight="true" fitToWidth="true" pannable="true">
             <StackPane fx:id="imageHolder" style="-fx-background-color: #CDD1D6;">
                 <padding>
                     <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
