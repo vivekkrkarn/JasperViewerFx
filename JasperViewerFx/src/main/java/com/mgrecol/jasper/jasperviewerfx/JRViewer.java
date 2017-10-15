@@ -123,6 +123,10 @@ public class JRViewer {
 
             retval.setWidth(jasperPrint.getPageWidth() + 100);
 
+            retval.setOnCloseRequest(event -> {
+                if (jrViewerFxController.busy()) event.consume();
+            });
+
             return retval;
         } catch (Exception e) {
             logger.error("Could not view report", e);

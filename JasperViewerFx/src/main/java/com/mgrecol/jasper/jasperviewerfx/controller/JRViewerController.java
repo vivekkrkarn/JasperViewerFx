@@ -2,6 +2,7 @@ package com.mgrecol.jasper.jasperviewerfx.controller;
 
 import com.mgrecol.jasper.jasperviewerfx.enums.JRViewerFileExportExtention;
 import com.mgrecol.jasper.jasperviewerfx.service.ExportService;
+import com.mgrecol.jasper.jasperviewerfx.service.PrintService;
 import com.mgrecol.jasper.jasperviewerfx.util.AlertUtils;
 import com.mgrecol.jasper.jasperviewerfx.util.ImageUtils;
 import javafx.collections.FXCollections;
@@ -23,9 +24,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
-import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.JasperPrintManager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -60,6 +59,8 @@ public class JRViewerController implements Initializable {
     private double originalPageWidth;
 
     private List<ImageView> pages = new ArrayList<>();
+
+    private PrintService printService;
 
     @FXML
     protected BorderPane view;
@@ -186,6 +187,10 @@ public class JRViewerController implements Initializable {
                 event.consume();
             }
         });
+
+        printService = new PrintService();
+        printService.onDialogClosed(event -> view.setDisable(false));
+        printService.onDialogError(event -> AlertUtils.showAlert(resourceBundle.getString("error.could.not.print")));
     }
 
     private void disablePrevBtns(boolean disable) {
@@ -242,14 +247,14 @@ public class JRViewerController implements Initializable {
         }
     }
 
+    public boolean busy() {
+        return printService.isRunning();
+    }
+
     @FXML
     private void print() {
-        try {
-            JasperPrintManager.printReport(jasperPrint, true);
-        } catch (JRException e) {
-            logger.error(e);
-            AlertUtils.showAlert(e, this.resourceBundle.getString("error.could.not.print"));
-        }
+        view.setDisable(true);
+        printService.showPrintDialog(jasperPrint);
     }
 
     @FXML
