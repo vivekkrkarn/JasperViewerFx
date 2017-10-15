@@ -28,6 +28,11 @@ public class PrintService extends Service<Boolean> {
             @Override
             protected Boolean call() throws Exception {
                 try {
+                    /*If message "no print service found" appears then use:
+                        java.awt.print.PrinterJob pj = PrinterJob.getPrinterJob();
+                        java.awt.print.PrintService ps = getPrintService();
+                    should not be null
+                    null when default printer is not set*/
                     JasperPrintManager.printReport(jasperPrint, true);
                     return true;
                 } catch (Exception e) {
