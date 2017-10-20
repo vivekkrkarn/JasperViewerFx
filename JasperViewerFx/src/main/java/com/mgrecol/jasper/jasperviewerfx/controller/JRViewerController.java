@@ -47,6 +47,10 @@ public class JRViewerController implements Initializable {
 
     private final Log logger = LogFactory.getLog(getClass());
 
+    private static final double SCREEN_DPI = 96;
+    private static final double JASPER_DPI = 72;
+    private static final double JASPER_TO_SCREEN_DPI_FIX = SCREEN_DPI / JASPER_DPI;
+
     private ResourceBundle resourceBundle;
 
     private JasperPrint jasperPrint;
@@ -197,8 +201,8 @@ public class JRViewerController implements Initializable {
     }
 
     public void init() {
-        originalPageHeight = jasperPrint.getPageHeight();
-        originalPageWidth = jasperPrint.getPageWidth();
+        originalPageHeight = jasperPrint.getPageHeight() * JASPER_TO_SCREEN_DPI_FIX;
+        originalPageWidth = jasperPrint.getPageWidth() * JASPER_TO_SCREEN_DPI_FIX;
 
         final List<Integer> pages = new ArrayList<>();
         final int pagesCount = jasperPrint.getPages().size();
