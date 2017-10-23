@@ -237,9 +237,17 @@ public class JRViewerController implements Initializable {
         fileChooser.getExtensionFilters().setAll(extensionFilters);
 
         File file = fileChooser.showSaveDialog(view.getScene().getWindow());
-        ExtensionFilter selectedExtensionFilter = fileChooser.getSelectedExtensionFilter();
+        if (null == file) return;
 
+        ExtensionFilter selectedExtensionFilter = fileChooser.getSelectedExtensionFilter();
         if (null != selectedExtensionFilter) {
+
+            // Windows XP does not append extension to file name
+            final String ext = selectedExtensionFilter.getExtensions().get(0)
+                    .replace("*", "").toLowerCase();
+            final String absolutePath = file.getAbsolutePath();
+            if (!absolutePath.toLowerCase().endsWith(ext)) file = new File(absolutePath + ext);
+
             try {
                 if (JRViewerFileExportExtention.PDF.getExtensionFilter().equals(selectedExtensionFilter)) {
                     ExportService.savePdf(jasperPrint, file);
