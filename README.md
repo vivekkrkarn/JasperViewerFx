@@ -30,6 +30,15 @@ JRViewer jrViewer = new JRViewer(
     )
 );
 ```
+
+You can listen to fail to load report event:
+```java
+final Stage viewerStage = jrViewer.buildStage(jasperPrint);
+viewerStage.addEventHandler(com.mgrecol.jasper.jasperviewerfx.event.JR_REPORT_LOAD_FAILED, e -> {
+    System.out.println("failed to load report");
+});
+```
+
 To build jar with dependencies use maven command:
 ```
 assembly:assembly -DdescriptorId=jar-with-dependencies
