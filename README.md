@@ -23,10 +23,14 @@ Additionally you can pass supported language parameter, scene size and export fi
 ```java
 JRViewer jrViewer = new JRViewer(
     JRViewerSupportedLocale.EN,
-    640, 420,
+    640, 420, "./reports", "my report.pdf",
     Arrays.asList(
         JRViewerFileExportExtention.PDF,
         JRViewerFileExportExtention.DOCX
     )
 );
+```
+To build jar with dependencies use maven command:
+```
+assembly:assembly -DdescriptorId=jar-with-dependencies
 ```
