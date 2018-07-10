@@ -3,8 +3,9 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.mgrecol.jasper</groupId>
     <artifactId>JasperViewerFx</artifactId>
-    <version>1.1.5-SNAPSHOT</version>
+    <version>1.0.1-SNAPSHOT</version>
     <name>JasperViewerFx</name>
+
     <build>
         <plugins>
             <plugin>
@@ -25,11 +26,6 @@
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
-                    <archive>
-                        <manifestEntries>
-                            <Version>${project.version}</Version>
-                        </manifestEntries>
-                    </archive>
                 </configuration>
             </plugin>
             <plugin>
@@ -39,12 +35,27 @@
             </plugin>
         </plugins>
     </build>
-    <dependencies>
+
+
+<dependencies>
+
         <!-- https://mvnrepository.com/artifact/net.sf.jasperreports/jasperreports -->
         <dependency>
             <groupId>net.sf.jasperreports</groupId>
             <artifactId>jasperreports</artifactId>
             <version>6.4.1</version>
         </dependency>
-    </dependencies>
+
+
+<!-- jphoenix -->
+      <dependency>
+         <groupId>com.jfoenix</groupId>
+         <artifactId>jfoenix</artifactId>
+         <version>1.8.0</version>
+      </dependency>
+
+
+</dependencies>
+
+
 </project>
