@@ -2,7 +2,6 @@ package com.mgrecol.jasper.jasperviewerfx.controller;
 
 import com.mgrecol.jasper.jasperviewerfx.enums.JRViewerFileExportExtention;
 import com.mgrecol.jasper.jasperviewerfx.service.ExportService;
-import com.mgrecol.jasper.jasperviewerfx.service.PrintService;
 import com.mgrecol.jasper.jasperviewerfx.util.AlertUtils;
 import com.mgrecol.jasper.jasperviewerfx.util.ImageUtils;
 import javafx.collections.FXCollections;
@@ -12,20 +11,20 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
+
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Slider;
+
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperPrintManager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -35,6 +34,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import com.jfoenix.controls.JFXComboBox;
+import com.jfoenix.controls.JFXSlider;
+
 /**
  * @author Michael Grecol
  * project JasperViewerFx
@@ -42,14 +44,12 @@ import java.util.ResourceBundle;
  * date Mar 23, 2015
  * @author improved by Alexey Silichenko (a.silichenko@gmail.com)
  * date Sep 27, 2017
+ * @author improved by Vivek Kumar Karn (response.vkk@gmail.com)
+ * date July 10, 2018
  */
 public class JRViewerController implements Initializable {
 
     private final Log logger = LogFactory.getLog(getClass());
-
-    private static final double SCREEN_DPI = 96;
-    private static final double JASPER_DPI = 72;
-    private static final double JASPER_TO_SCREEN_DPI_FIX = SCREEN_DPI / JASPER_DPI;
 
     private ResourceBundle resourceBundle;
 
@@ -63,43 +63,28 @@ public class JRViewerController implements Initializable {
     private double originalPageHeight;
     private double originalPageWidth;
 
-    private List<ImageView> pages = new ArrayList<>();
-
-    private PrintService printService;
-
     @FXML
     protected BorderPane view;
+
     @FXML
-    private ComboBox<Integer> pageList;
+    private HBox toolbar_Hbox;
+
     @FXML
-    private Slider zoomLevel;
+    private JFXComboBox<Integer> pageList;
+    @FXML
+    private JFXSlider zoomLevel;
     @FXML
     private StackPane imageHolder;
     @FXML
     private ScrollPane scrollPane;
     @FXML
     private VBox vbox;
-    @FXML
-    public ImageView loadingIcon;
-
-    @FXML
-    private Button firstPageBtn;
-    @FXML
-    private Button prevPageBtn;
-    @FXML
-    private Button nextPageBtn;
-    @FXML
-    private Button lastPageBtn;
-
-    public boolean busy() {
-        return printService.isRunning();
-    }
 
     private double pageToScrollValue(int pageNumber) {
         final double nodeY = vbox.getChildren().get(pageNumber).getLayoutY();
-        final double contentH = imageHolder.getHeight();
+        final double imageHolderH = imageHolder.getHeight();
         final double viewportH = scrollPane.getViewportBounds().getHeight();
-        final double calcH = contentH - viewportH;
+        final double calcH = imageHolderH - viewportH;
         return nodeY / calcH;
     }
 
@@ -109,7 +94,7 @@ public class JRViewerController implements Initializable {
      * @param value scroll v value
      * @return page number
      */
-    private int scrollValueToPage(double value) {
+    private int scrollValueToTage(double value) {
         final double imageHolderH = imageHolder.getHeight();
         final double viewportH = scrollPane.getViewportBounds().getHeight();
         final double checkLinePos = viewportH / 2;
@@ -131,35 +116,17 @@ public class JRViewerController implements Initializable {
         return imageView;
     }
 
-    /**
-     * Load report and create a list of images for pages
-     */
-    public void loadPages() {
+    private void loadPages() {
         final int pagesCount = jasperPrint.getPages().size();
         for (int i = 0; i < pagesCount; i++) {
             final Image image = ImageUtils.getImage(jasperPrint, i);
-            pages.add(scaleImageView(new ImageView(image)));
+            vbox.getChildren().add(scaleImageView(new ImageView(image)));
         }
-        loadingIcon.setVisible(false);
-    }
-
-    /**
-     * Put images list into container on GUI
-     */
-    public void displayPages() {
-        vbox.getChildren().setAll(pages);
-        view.setDisable(false);
-        disableNextBtns(pages.size() <= 1);
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         resourceBundle = resources;
-
-        view.setDisable(true);
-        view.disableProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue) scrollPane.requestFocus();
-        });
 
         imageHolder.heightProperty()
                 .addListener((observable, oldValue, newValue) -> scrollPane.setVvalue(vvalue));
@@ -176,54 +143,25 @@ public class JRViewerController implements Initializable {
         });
 
         scrollPane.vvalueProperty().addListener((observable, oldValue, newValue) -> {
-            final int value = scrollValueToPage(newValue.doubleValue());
+            final int value = scrollValueToTage(newValue.doubleValue());
             final EventHandler<ActionEvent> onAction = pageList.getOnAction();
             pageList.setOnAction(null);
             pageList.setValue(value);
             pageList.setOnAction(onAction);
-            disablePrevBtns(1 == value);
-            disableNextBtns(pages.size() == value);
         });
-
-        printService = new PrintService();
-        printService.onDialogClosed(event -> view.setDisable(false));
-        printService.onDialogError(event -> AlertUtils.showAlert(resourceBundle.getString("error.could.not.print")));
-    }
-
-    private void disablePrevBtns(boolean disable) {
-        firstPageBtn.setDisable(disable);
-        prevPageBtn.setDisable(disable);
-    }
-
-    private void disableNextBtns(boolean disable) {
-        nextPageBtn.setDisable(disable);
-        lastPageBtn.setDisable(disable);
     }
 
     public void init() {
-        originalPageHeight = jasperPrint.getPageHeight() * JASPER_TO_SCREEN_DPI_FIX;
-        originalPageWidth = jasperPrint.getPageWidth() * JASPER_TO_SCREEN_DPI_FIX;
+        originalPageHeight = jasperPrint.getPageHeight();
+        originalPageWidth = jasperPrint.getPageWidth();
 
         final List<Integer> pages = new ArrayList<>();
         final int pagesCount = jasperPrint.getPages().size();
         for (int i = 0; i < pagesCount; ) pages.add(++i);
         pageList.setItems(FXCollections.observableArrayList(pages));
         pageList.getSelectionModel().select(0);
-    }
 
-    @FXML
-    private void onScrollKeyPressed(KeyEvent event) {
-        Integer mod = null;
-        if (KeyCode.PAGE_UP.equals(event.getCode())) mod = -1;
-        if (KeyCode.PAGE_DOWN.equals(event.getCode())) mod = 1;
-
-        if (null != mod) {
-            final double contentH = imageHolder.getHeight();
-            final double viewportH = scrollPane.getViewportBounds().getHeight();
-            final double vvalue = scrollPane.getVvalue();
-            scrollPane.setVvalue(vvalue + mod * (viewportH / contentH));
-            event.consume();
-        }
+        loadPages();
     }
 
     @FXML
@@ -237,17 +175,9 @@ public class JRViewerController implements Initializable {
         fileChooser.getExtensionFilters().setAll(extensionFilters);
 
         File file = fileChooser.showSaveDialog(view.getScene().getWindow());
-        if (null == file) return;
-
         ExtensionFilter selectedExtensionFilter = fileChooser.getSelectedExtensionFilter();
+
         if (null != selectedExtensionFilter) {
-
-            // Windows XP does not append extension to file name
-            final String ext = selectedExtensionFilter.getExtensions().get(0)
-                    .replace("*", "").toLowerCase();
-            final String absolutePath = file.getAbsolutePath();
-            if (!absolutePath.toLowerCase().endsWith(ext)) file = new File(absolutePath + ext);
-
             try {
                 if (JRViewerFileExportExtention.PDF.getExtensionFilter().equals(selectedExtensionFilter)) {
                     ExportService.savePdf(jasperPrint, file);
@@ -269,8 +199,12 @@ public class JRViewerController implements Initializable {
 
     @FXML
     private void print() {
-        view.setDisable(true);
-        printService.showPrintDialog(jasperPrint);
+        try {
+            JasperPrintManager.printReport(jasperPrint, true);
+        } catch (JRException e) {
+            logger.error(e);
+            AlertUtils.showAlert(e, this.resourceBundle.getString("error.could.not.print"));
+        }
     }
 
     @FXML
