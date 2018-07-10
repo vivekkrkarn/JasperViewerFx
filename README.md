@@ -1,6 +1,8 @@
 JasperViewerFx
 ------------------
 
+Here is a demo:
+
 ![demo](https://raw.githubusercontent.com/vivekkrkarn/JasperViewerFx/master/demo.gif)
 
 
