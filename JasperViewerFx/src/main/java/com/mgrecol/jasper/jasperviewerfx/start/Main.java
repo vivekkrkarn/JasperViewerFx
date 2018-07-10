@@ -1,7 +1,9 @@
+/**
+ *
+ */
 package com.mgrecol.jasper.jasperviewerfx.start;
 
 import com.mgrecol.jasper.jasperviewerfx.JRViewer;
-import com.mgrecol.jasper.jasperviewerfx.util.AlertUtils;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import net.sf.jasperreports.engine.*;
@@ -13,8 +15,6 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-
-import static com.mgrecol.jasper.jasperviewerfx.event.JRViewerEvent.JR_REPORT_LOAD_FAILED;
 
 /**
  * @author Michael Grecol
@@ -64,12 +64,8 @@ public class Main extends Application {
                 new HashMap<>(), new JREmptyDataSource());
 
         JRViewer jrViewer = new JRViewer();
-        Stage viewerStage = jrViewer.buildStage(jasperPrint);
+        Stage viewerStage = jrViewer.getViewerStage(jasperPrint);
         viewerStage.setTitle(TITLE);
-        viewerStage.addEventHandler(JR_REPORT_LOAD_FAILED, event -> {
-            logger.info("JR_REPORT_LOAD_FAILED");
-            AlertUtils.showAlert(new Exception("message"), "title");
-        });
         viewerStage.show();
 
         logger.info("Jasper viewer started");
